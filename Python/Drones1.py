@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.fft import ifft, fft, fftfreq
 
-dataset1 = loadmat('2023.03.31-11.44.02_channel_0.mat')
+dataset1 = loadmat('/Users/bogda/Documents/NFS/ Научка/Исходные данные/Matlab_Files/2023.03.31-11.44.02_channel_0.mat')
 print(dataset1)
-dataset2 = loadmat('2023.03.31-11.59.31_channel_0.mat')
+dataset2 = loadmat('/Users/bogda/Documents/NFS/ Научка/Исходные данные/Matlab_Files/2023.03.31-11.59.31_channel_0.mat')
 print(dataset2)
 
 Fs=48000 #Частота дискретизации
@@ -37,6 +37,7 @@ for i in range(int(len(data1)/2),int(len(data1))):
 def corr(data1,data2):
     corr = np.fft.fftshift(fft(ifft(data1)*np.conj(ifft(data2))))
     return corr
+
 def norm(corr):
     norm = np.max(corr)
     return norm
@@ -51,7 +52,7 @@ data1 = data1[0:mn]
 data2 = data2[0:mn]
 
 t = np.arange(mn)/Fs
-tc = t-mn/Fs/2
+t_central = t-mn/Fs/2
 
 plt.plot(t, data2, color='blue', label='Big')
 plt.plot(t, data1, color='red', label='Small')
@@ -68,10 +69,10 @@ f = fftfreq(len(data1), 1 / Fs)
 plt.plot(f, np.abs(y2)/max(np.abs(y2)), color='blue', label='Big')
 plt.plot(f, np.abs(y1)/max(np.abs(y1)), color='red', label='Small')
 plt.xlabel("f, Гц")
-plt.xlim(0,2000)
+plt.xlim(-2000,2000)
 plt.show()
 
-plt.plot(tc, corr_corr(data1, data2))
+plt.plot(t_central, corr_corr(data1, data2))
 
 s1 = np.zeros(mn)
 s2 = np.zeros(mn)
@@ -83,12 +84,12 @@ for i in range (0, mn):
             s2[i] = y2[i]
 
 
-# plt.plot(f, np.abs(s1), color='red', label='Small')
-# plt.plot(f, np.abs(s2), color='blue', label='Big')
-# plt.xlabel("f")
-# plt.ylabel("X(f)")
-# plt.xlim([-1000, 1000])
-# plt.show()
+plt.plot(f, np.abs(s1), color='red', label='Small')
+plt.plot(f, np.abs(s2), color='blue', label='Big')
+plt.xlabel("f")
+plt.ylabel("X(f)")
+plt.xlim([-1000, 1000])
+plt.show()
 
 # plt.plot(tc, corr(data1,data2) / norm(corr(data1,data1)), color='blue', label='Small')
 # plt.xlabel("t")
