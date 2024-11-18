@@ -13,6 +13,7 @@ from plotly.subplots import make_subplots
 import pandas as pd
 from datetime import datetime, timedelta
 
+
 # Загрузка экспериментальных данных и используемые методы
 sample_rate, audio_data49_3 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S3.wav')
 sample_rate, audio_data49_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S2.wav')
@@ -21,6 +22,7 @@ sample_rate, audio_data16_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scien
 df = pd.read_excel('/Users/bogda/Desktop/Acoustics/Scientific/Таблицы Данных/Conducting an experiment 30_08.xlsx')
 
 t = np.arange(int(len(audio_data49_3)))/sample_rate # Массив времен
+
 
 def plot1 (X1, Y1, name, xlabel = '', ylabel = 'Амплитуда, у.е.'):
     plt.figure(figsize=(10,4))
@@ -167,10 +169,10 @@ def cos_sim (data1, data2, f_filt):
 
 
 def mean_portrait_signal(portrait, signal, f_filt):
-    max1 = np.max(np.abs(corr_t(signal, portrait, f_filt)))
-    max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt))))
-    a = max1 / max_signal
-    return a
+   max1 = np.max(np.abs(corr_t(signal, signal, f_filt) * corr_t(portrait, portrait, f_filt)))
+   max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt) * corr_t(portrait, portrait, f_filt)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt) * corr_t(signal, signal, f_filt))))
+   a = max1 / max_signal
+   return a
 
 
 def mean_data_sep(data, t_sep):
