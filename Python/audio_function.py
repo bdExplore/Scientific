@@ -168,11 +168,12 @@ def cos_sim (data1, data2, f_filt):
     return SN
 
 
-def mean_portrait_signal(portrait, signal, f_filt):
-   max1 = np.max(np.abs(corr_t(signal, signal, f_filt) * corr_t(portrait, portrait, f_filt)))
-   max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt) * corr_t(portrait, portrait, f_filt)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt) * corr_t(signal, signal, f_filt))))
-   a = max1 / max_signal
-   return a
+def mean_autocorr_signal(portrait, signal, f_filt):
+    max1 = np.max(np.abs(corr_t(signal, portrait, f_filt)))
+    max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt))))
+    a = max1 / max_signal
+
+    return a
 
 
 def mean_data_sep(data, t_sep):
