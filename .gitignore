@@ -5,3 +5,4 @@ graphs/.DS_Store
 *.wav
 *.mat
 *.hprj
+Python/__pycache__/audio_function.cpython-311.pyc
