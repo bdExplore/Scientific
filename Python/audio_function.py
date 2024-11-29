@@ -195,13 +195,13 @@ def mean_data_sep(data, t_sep):
 def variation_data(data, t_sep, s_r = sample_rate):
     l = len(data)
     l_sec = l * s_r
-    counts_per_t_sep = s_r*t_sep
+    counts_per_t_sep = s_r * t_sep
     n = int(l/counts_per_t_sep)
     var_arr = []
     if (l_sec%t_sep) != 0:
-        data = data[:int(n*counts_per_t_sep)]
+        data = data[:int(n * counts_per_t_sep)]
     for i in range (0, n):
-        j = int((i+1)*counts_per_t_sep)
+        j = int((i+1) * counts_per_t_sep)
         data_t_sec = data[:j]
         f = fftfreq(int(len(data_t_sec)), 1 / sample_rate)
         # plot1_f(f, np.abs(ifft(data_t_sec)), 'спектры частей отрезка', 1000)
