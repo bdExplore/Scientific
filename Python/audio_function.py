@@ -19,7 +19,10 @@ sample_rate, audio_data49_3 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scien
 sample_rate, audio_data49_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S2.wav')
 sample_rate, audio_data16_3 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0016S3.wav')
 sample_rate, audio_data16_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0016S3.wav')
+sample_rate, audio_data49_1 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S1.wav')
 df = pd.read_excel('/Users/bogda/Desktop/Acoustics/Scientific/Таблицы Данных/Conducting an experiment 30_08.xlsx')
+
+print(f'Данные загружены')
 
 t = np.arange(int(len(audio_data49_3)))/sample_rate # Массив времен
 
@@ -45,17 +48,15 @@ def plot1_f (X1, Y1, name, freq_sep:int, xlabel = '', ylabel = 'Амплитуд
     plt.show()   
     
 
-def corr_t(data1, data2, f_filt):
+def corr_t(data1, data2, f_filt_min, f_filt_max):
     mn=min([len(data1), len(data2)])
     data1 = data1[0:mn]
     data2 = data2[0:mn]
-    data1_f = ifft(data1)
-    data2_f = ifft(data2)
-
-    data1_f = filt_freq(data1_f, f_filt)
-    data2_f = filt_freq(data2_f, f_filt)
-
-    return np.fft.fftshift(fft(data1_f*np.conj(data2_f)))
+    
+    data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
+    data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
+    print(np.max(data2))
+    return np.fft.fftshift((data1_filt*np.conj(data2_filt)))
 
 
 def corr_f(data1, data2, f1):
@@ -135,28 +136,46 @@ def first_second_part(data):
     return data_first, data_second
 
 
-def filt_freq(data, f_filt):
-    l = len(data)
-    array = np.zeros(l)
-    data_f = (ifft(data))
-    f = fftfreq(int(l), 1 / sample_rate)
-    f_int = (f > -f_filt) & (f < f_filt)
-    array[f_int] = (data_f[f_int])
-    return (fft(array))
+def filt_freq(data_, f_filt_min = 0, f_filt_max = 250):
 
+    l = len(data_)
+    f_1 = fftfreq(int(l), 1 / sample_rate)
 
-def cos_sim (data1, data2, f_filt):
-    # mn = min(len(data1), len(data2))
-    # data1 = data1[:mn]
-    # data2 = data2[:mn]
-    data1 = filt_freq(data1, f_filt)
-    data2 = filt_freq(data2, f_filt)
-    data1 = np.array(ifft(data1))
-    data2 = np.array(ifft(data2))
+    # plot1_f(f, data_f, 'Спектр до', 10000, 'f, Гц')
+
+    array_1 = np.zeros(l)
+    f_int_1 = (np.abs(f_1) > f_filt_min) & (np.abs(f_1) < f_filt_max)
+    array_1[f_int_1] = data_[f_int_1]
+
+    # array_2 = np.zeros(l)
+    # f_int_2 = (f < -f_filt_min) & (f > f_filt_min)
+    # array_2[f_int_2] = array_1[f_int_2]
     
+    # plot1_f(f, array_1, 'Спектр после', 300, 'f, Гц')
+    # plot1_f(f, data_f, 'Спектр после', 300, 'f, Гц')
+    return array_1
+
+
+def cos_sim (data1, data2, f_filt_min, f_filt_max):
+    
+
+    
+    # data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
+    
+    # data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
+
+    
+    # data12 = np.sum(data1_filt*data2_filt)
+    # norm1 = np.sum((np.abs(data1_filt))**2)
+    # norm2 = np.sum((np.abs(data2_filt))**2)
+
+    
+    data1 = data1/np.max(data1)
+    data2 = data2/np.max(data2)
     data12 = np.sum(data1*data2)
-    norm1 = np.sum(data1**2)
-    norm2 = np.sum(data2**2)
+    norm1 = np.sum((np.abs(data1))**2)
+    norm2 = np.sum((np.abs(data2))**2)
+
     if norm1 == 0 :
         print('На ноль не делим_1')
     if norm2 == 0 :
@@ -168,9 +187,9 @@ def cos_sim (data1, data2, f_filt):
     return SN
 
 
-def mean_autocorr_signal(portrait, signal, f_filt):
-    max1 = np.max(np.abs(corr_t(signal, portrait, f_filt)))
-    max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt))))
+def mean_autocorr_signal(portrait, signal, f_filt_min, f_filt_max):
+    max1 = np.max(np.abs(corr_t(signal, portrait, f_filt_min, f_filt_max)))
+    max_signal = np.sqrt(np.max(np.abs(corr_t(portrait, portrait, f_filt_min, f_filt_max)))) * np.sqrt(np.max(np.abs(corr_t(signal, signal, f_filt_min, f_filt_max))))
     a = max1 / max_signal
 
     return a
@@ -179,6 +198,7 @@ def mean_autocorr_signal(portrait, signal, f_filt):
 def mean_data_sep(data, t_sep):
     l = len(data)
     n = int(l/sample_rate/t_sep)
+    
     mean_ifft_data = np.zeros(int(sample_rate/n), dtype=complex)
 
     if l%n != 0:
@@ -186,9 +206,10 @@ def mean_data_sep(data, t_sep):
         
     for i in range (0, n):
         data_t_sec = data[int(i*sample_rate*t_sep) : int((i+1)*sample_rate*t_sep)]
-        mean_ifft_data += np.abs(ifft(data_t_sec))
+       
+        mean_ifft_data += (np.abs(ifft(data_t_sec)))**2
     
-    return np.array(fft(mean_ifft_data))
+    return (np.array(mean_ifft_data)/n)
 
 
 
@@ -210,13 +231,8 @@ def variation_data(data, t_sep, s_r = sample_rate):
     return var_arr
 
 
-def t_central(t, sample_rate):
-    t_c = t - len(t)/sample_rate/2
-    return t_c
-
-
 def t_arr_for_corr_t(data):
     l = len(data)
     t = np.arange(l)/sample_rate
-    t = t_central(t, sample_rate)
-    return t
+    t_c = t - len(t)/sample_rate/2
+    return t_c
