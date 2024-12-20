@@ -50,31 +50,25 @@ def plot1_f (X1, Y1, name, freq_sep:int, xlabel = '', ylabel = 'Амплитуд
 
 def corr_t(data1, data2, f_filt_min, f_filt_max):
     mn=min([len(data1), len(data2)])
-    data1 = data1[0:mn]
-    data2 = data2[0:mn]
+    # data1 = data1[0:mn]
+    # data2 = data2[0:mn]
     
     data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
     data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
-    print(np.max(data2))
+
     return np.fft.fftshift((data1_filt*np.conj(data2_filt)))
 
 
-def corr_f(data1, data2, f1):
-    mn = min(len(data1), len(data2))
-    data1_f = ifft(data1)
-    data2_f = ifft(data2)
-    s1 = np.zeros(mn)
-    s2 = np.zeros(mn)
-    f = fftfreq(mn, 1 / sample_rate)
+def corr_f(data1_t, data2_t, f_filt_min, f_filt_max):
+    mn = min(len(data1_t), len(data2_t))
+    data1_f = ifft(data1_t)
+    data2_f = ifft(data2_t)
+    data1_filt = filt_freq(data1_f, f_filt_min, f_filt_max)
+    data2_filt = filt_freq(data2_f, f_filt_min, f_filt_max)
 
-    for i in range (0, mn):
-        if f[i] > -f1:
-            if f[i] < f1:
-                s1[i] = data1_f[i]
-                s2[i] = data2_f[i]
 
-    fft_abs_s1 = fft((np.abs(s1))**2)
-    fft_abs_s2 = fft((np.abs(s2))**2)
+    fft_abs_s1 = fft((np.abs(data1_filt))**2)
+    fft_abs_s2 = fft((np.abs(data2_filt))**2)
     
     corr_f = ifft((fft_abs_s1)*np.conj(fft_abs_s2))
     return corr_f
@@ -136,16 +130,16 @@ def first_second_part(data):
     return data_first, data_second
 
 
-def filt_freq(data_, f_filt_min = 0, f_filt_max = 250):
+def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
 
-    l = len(data_)
+    l = len(data_f)
     f_1 = fftfreq(int(l), 1 / sample_rate)
 
     # plot1_f(f, data_f, 'Спектр до', 10000, 'f, Гц')
 
     array_1 = np.zeros(l)
     f_int_1 = (np.abs(f_1) > f_filt_min) & (np.abs(f_1) < f_filt_max)
-    array_1[f_int_1] = data_[f_int_1]
+    array_1[f_int_1] = data_f[f_int_1]
 
     # array_2 = np.zeros(l)
     # f_int_2 = (f < -f_filt_min) & (f > f_filt_min)
@@ -160,9 +154,9 @@ def cos_sim (data1, data2, f_filt_min, f_filt_max):
     
 
     
-    # data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
+    data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
     
-    # data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
+    data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
 
     
     # data12 = np.sum(data1_filt*data2_filt)
@@ -170,8 +164,8 @@ def cos_sim (data1, data2, f_filt_min, f_filt_max):
     # norm2 = np.sum((np.abs(data2_filt))**2)
 
     
-    data1 = data1/np.max(data1)
-    data2 = data2/np.max(data2)
+    data1 = data1_filt/np.max(data1_filt)
+    data2 = data2_filt/np.max(data2_filt)
     data12 = np.sum(data1*data2)
     norm1 = np.sum((np.abs(data1))**2)
     norm2 = np.sum((np.abs(data2))**2)
