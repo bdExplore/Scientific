@@ -164,8 +164,8 @@ def cos_sim (data1, data2, f_filt_min, f_filt_max):
     # norm2 = np.sum((np.abs(data2_filt))**2)
 
     
-    data1 = data1_filt/np.max(data1_filt)
-    data2 = data2_filt/np.max(data2_filt)
+    data1 = data1/np.max(data1)
+    data2 = data2/np.max(data2)
     data12 = np.sum(data1*data2)
     norm1 = np.sum((np.abs(data1))**2)
     norm2 = np.sum((np.abs(data2))**2)
