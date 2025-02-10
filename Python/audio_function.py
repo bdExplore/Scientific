@@ -17,9 +17,12 @@ from datetime import datetime, timedelta
 # Загрузка экспериментальных данных и используемые методы
 sample_rate, audio_data49_3 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S3.wav')
 sample_rate, audio_data49_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S2.wav')
+sample_rate, audio_data49_1 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S2.wav')
+
+sample_rate, audio_data16_4 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0016S4.wav')
 sample_rate, audio_data16_3 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0016S3.wav')
 sample_rate, audio_data16_2 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0016S3.wav')
-sample_rate, audio_data49_1 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S1.wav')
+sample_rate, audio_data16_1 = wavfile.read('/Users/bogda/Desktop/Acoustics/Scientific/Исходные данные/ExpSummer2024/TASCAM_Files/TASCAM_0049S1.wav')
 df = pd.read_excel('/Users/bogda/Desktop/Acoustics/Scientific/Таблицы Данных/Conducting an experiment 30_08.xlsx')
 
 print(f'Данные загружены')
@@ -48,13 +51,12 @@ def plot1_f (X1, Y1, name, freq_sep:int, xlabel = '', ylabel = 'Амплитуд
     plt.show()   
     
 
-def corr_t(data1, data2, f_filt_min, f_filt_max):
-    mn=min([len(data1), len(data2)])
-    # data1 = data1[0:mn]
-    # data2 = data2[0:mn]
+def corr_t(data1_t, data2_t, f_filt_min, f_filt_max):
     
-    data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
-    data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
+    data1_f = ifft(data1_t)
+    data2_f = ifft(data2_t)
+    data1_filt = fft(filt_freq(data1_f, f_filt_min, f_filt_max))
+    data2_filt = fft(filt_freq(data2_f, f_filt_min, f_filt_max))
 
     return np.fft.fftshift((data1_filt*np.conj(data2_filt)))
 
@@ -65,7 +67,6 @@ def corr_f(data1_t, data2_t, f_filt_min, f_filt_max):
     data2_f = ifft(data2_t)
     data1_filt = filt_freq(data1_f, f_filt_min, f_filt_max)
     data2_filt = filt_freq(data2_f, f_filt_min, f_filt_max)
-
 
     fft_abs_s1 = fft((np.abs(data1_filt))**2)
     fft_abs_s2 = fft((np.abs(data2_filt))**2)
