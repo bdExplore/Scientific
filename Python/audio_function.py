@@ -192,6 +192,7 @@ def mean_autocorr_signal(portrait, signal, f_filt_min, f_filt_max):
 
 
 def mean_data_sep(data, t_sep):
+
     l = len(data)
     n = int(l/sample_rate/t_sep)
     
@@ -201,9 +202,10 @@ def mean_data_sep(data, t_sep):
        data = data[:n*sample_rate*t_sep]
         
     for i in range (0, n):
-        data_t_sec = data[int(i*sample_rate*t_sep) : int((i+1)*sample_rate*t_sep)]
+
+        data_t_sep = data[int(i*sample_rate*t_sep) : int((i+1)*sample_rate*t_sep)]
        
-        mean_ifft_data += (np.abs(ifft(data_t_sec)))**2
+        mean_ifft_data += (np.abs(ifft(data_t_sep)))**2
     
     return (np.array(mean_ifft_data)/n)
 

@@ -103,6 +103,7 @@ def flt (f, y, begin, end):
                 z[i] = y[i]
     return z
 
+
 def flt_tanh(sgnl, f, f_down, f_up, df_down, df_up):
     m_1 = 1/2 * ( np.tanh((f - f_down)/df_down) + 1)  +  1/2 * (1- np.tanh((f - (Fs-f_down))/df_down) ) -1          
     m_2 = 2-1/2 * ( np.tanh((f - f_up)/df_up) + 1)  -  1/2 * (1- np.tanh((f - (Fs-f_up))/df_up) )   
