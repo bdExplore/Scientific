@@ -123,6 +123,7 @@ def load_mat(data_1_str: str):
 def first_second_part(data):
     data_first = []
     data_second = []
+    
     for i in range(0,int(len(data)/2)):
         data_first.append(data[i])
     
@@ -154,18 +155,13 @@ def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
 
 def cos_sim (data1, data2, f_filt_min, f_filt_max):
     
-
-    
     data1_filt = filt_freq(data1, f_filt_min, f_filt_max)
-    
     data2_filt = filt_freq(data2, f_filt_min, f_filt_max)
 
-    
     # data12 = np.sum(data1_filt*data2_filt)
     # norm1 = np.sum((np.abs(data1_filt))**2)
     # norm2 = np.sum((np.abs(data2_filt))**2)
 
-    
     data1 = data1/np.max(data1)
     data2 = data2/np.max(data2)
     data12 = np.sum(data1*data2)
@@ -217,8 +213,10 @@ def variation_data(data, t_sep, s_r = sample_rate):
     counts_per_t_sep = s_r * t_sep
     n = int(l/counts_per_t_sep)
     var_arr = []
+
     if (l_sec%t_sep) != 0:
         data = data[:int(n * counts_per_t_sep)]
+
     for i in range (0, n):
         j = int((i+1) * counts_per_t_sep)
         data_t_sec = data[:j]
