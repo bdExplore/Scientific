@@ -54,25 +54,25 @@ def plot1_f (X1, Y1, name, freq_sep:int, xlabel = '', ylabel = 'Амплитуд
 
 def corr_t(data1_t, data2_t, f_filt_min, f_filt_max):
     
-    data1_f = ifft(data1_t)
-    data2_f = ifft(data2_t)
+    data1_f = fft(data1_t)
+    data2_f = fft(data2_t)
     data1_filt = (filt_freq(data1_f, f_filt_min, f_filt_max))
     data2_filt = (filt_freq(data2_f, f_filt_min, f_filt_max))
 
-    return np.fft.fftshift(fft(data1_filt*np.conj(data2_filt)))
+    return ifft(data1_filt*np.conj(data2_filt))
 
 
 def corr_f(data1_t, data2_t, f_filt_min, f_filt_max):
     mn = min(len(data1_t), len(data2_t))
-    data1_f = ifft(data1_t)
-    data2_f = ifft(data2_t)
+    data1_f = fft(data1_t)
+    data2_f = fft(data2_t)
     data1_filt = filt_freq(data1_f, f_filt_min, f_filt_max)
     data2_filt = filt_freq(data2_f, f_filt_min, f_filt_max)
 
-    fft_abs_s1 = fft((np.abs(data1_filt))**2)
-    fft_abs_s2 = fft((np.abs(data2_filt))**2)
+    fft_abs_s1 = ifft((np.abs(data1_filt))**2)
+    fft_abs_s2 = ifft((np.abs(data2_filt))**2)
     
-    corr_f = ifft((fft_abs_s1)*np.conj(fft_abs_s2))
+    corr_f = fft((fft_abs_s1)*np.conj(fft_abs_s2))
     return corr_f
 
 
@@ -140,9 +140,9 @@ def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
 
     # plot1_f(f, data_f, 'Спектр до', 10000, 'f, Гц')
 
-    array_1 = np.zeros(l)
+    array_f = np.zeros(l)
     f_int_1 = (np.abs(f_1) > f_filt_min) & (np.abs(f_1) < f_filt_max)
-    array_1[f_int_1] = data_f[f_int_1]
+    array_f[f_int_1] = data_f[f_int_1]
 
     # array_2 = np.zeros(l)
     # f_int_2 = (f < -f_filt_min) & (f > f_filt_min)
@@ -150,7 +150,7 @@ def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
     
     # plot1_f(f, array_1, 'Спектр после', 300, 'f, Гц')
     # plot1_f(f, data_f, 'Спектр после', 300, 'f, Гц')
-    return array_1
+    return array_f
 
 
 def cos_sim (data1, data2, f_filt_min, f_filt_max):
