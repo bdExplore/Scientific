@@ -144,12 +144,6 @@ def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
     f_int_1 = (np.abs(f_1) > f_filt_min) & (np.abs(f_1) < f_filt_max)
     array_f[f_int_1] = data_f[f_int_1]
 
-    # array_2 = np.zeros(l)
-    # f_int_2 = (f < -f_filt_min) & (f > f_filt_min)
-    # array_2[f_int_2] = array_1[f_int_2]
-    
-    # plot1_f(f, array_1, 'Спектр после', 300, 'f, Гц')
-    # plot1_f(f, data_f, 'Спектр после', 300, 'f, Гц')
     return array_f
 
 
