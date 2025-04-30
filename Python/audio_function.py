@@ -226,3 +226,10 @@ def t_arr_for_corr_t(data):
     t = np.arange(l)/sample_rate
     t_c = t - len(t)/sample_rate/2
     return t_c
+
+
+def RMS(signal, f_low, f_high):
+    filtered = filt_freq(fft(signal), f_low, f_high)
+    N = len(filtered != 0)
+    energy = np.sqrt(np.sum(np.abs(filtered) ** 2) / N)  # Сумма квадратов модуля амплитуд
+    return energy 
