@@ -133,7 +133,7 @@ def first_second_part(data):
     return data_first, data_second
 
 
-def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250):
+def filt_freq(data_f, f_filt_min = 0, f_filt_max = 250, sample_rate = 44100):
 
     l = len(data_f)
     f_1 = fftfreq(int(l), 1 / sample_rate)
@@ -227,13 +227,13 @@ def t_arr_for_corr_t(data):
     t_c = t - len(t)/sample_rate/2
     return t_c
 
-def flt_tanh(sgnl, f, f_down, f_up, df_down, df_up):
-    m_1 = 1/2 * ( np.tanh((f - f_down)/df_down) + 1)  +  1/2 * (1- np.tanh((f - (Fs-f_down))/df_down) ) -1          
-    m_2 = 2-1/2 * ( np.tanh((f - f_up)/df_up) + 1)  -  1/2 * (1- np.tanh((f - (Fs-f_up))/df_up) )   
-    f_mask = m_1 * m_2
-    y_n = f_mask * y1
-    sig_flt = 2*np.real(fft(y_n))
-    return f_mask, sig_flt
+# def flt_tanh(sgnl, f, f_down, f_up, df_down, df_up):
+#     m_1 = 1/2 * ( np.tanh((f - f_down)/df_down) + 1)  +  1/2 * (1- np.tanh((f - (Fs-f_down))/df_down) ) -1          
+#     m_2 = 2-1/2 * ( np.tanh((f - f_up)/df_up) + 1)  -  1/2 * (1- np.tanh((f - (Fs-f_up))/df_up) )   
+#     f_mask = m_1 * m_2
+#     y_n = f_mask * y1
+#     sig_flt = 2*np.real(fft(y_n))
+#     return f_mask, sig_flt
 
 
 def RMS(signal, f_low, f_high):
