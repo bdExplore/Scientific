@@ -147,23 +147,7 @@ def first_second_part(data):
 #     return (array_f)
 
 def filt_freq(fft_data, f_low, f_high, fs):
-    """
-    Фильтрует спектр сигнала в заданном диапазоне частот.
     
-    Параметры:
-        fft_data : np.ndarray
-            Преобразование Фурье сигнала (обычно результат np.fft.fft).
-        f_low : float
-            Нижняя граница фильтрации (в Гц).
-        f_high : float
-            Верхняя граница фильтрации (в Гц).
-        fs : float
-            Частота дискретизации (в Гц).
-    
-    Возвращает:
-        np.ndarray:
-            Отфильтрованный спектр сигнала (в частотной области).
-    """
     N = len(fft_data)
     freqs = np.fft.fftfreq(N, d=1/fs)
 
@@ -174,6 +158,7 @@ def filt_freq(fft_data, f_low, f_high, fs):
     filtered_fft = fft_data * mask
 
     return filtered_fft
+
 
 def cos_sim (data1, data2, f_filt_min, f_filt_max):
     
@@ -264,8 +249,8 @@ def t_arr_for_corr_t(data):
 #     return f_mask, sig_flt
 
 
-def RMS(signal, f_low, f_high, sample_rate):
-    filtered = filt_freq(fft(signal), f_low, f_high, sample_rate)
+def RMS(signal_t, f_low, f_high, sample_rate):
+    filtered = filt_freq(fft(signal_t), f_low, f_high, sample_rate)
     N = len(signal)
     energy = np.sqrt(np.sum(np.abs(filtered) ** 2) / N)  # Сумма квадратов модуля амплитуд
     return energy 
