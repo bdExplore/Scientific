@@ -253,3 +253,42 @@ def RMS(signal):
     N = len(signal)
     energy = np.sqrt(np.sum(np.abs(signal) ** 2) / N)  # Сумма квадратов модуля амплитуд
     return energy 
+
+def generate_octave_band_frequencies(N, f_start, f_end):
+    """
+    Параметры:
+    N (int): Деление октавы (для 1/12-октавных фильтров N=12).
+    f_start (float): Начальная частота диапазона (Гц).
+    f_end (float): Конечная частота диапазона (Гц).
+    """
+
+    # Шаг частот для 1/N октавы (коэффициент)
+    G = 2**(1/N)
+    
+    # Коэффициент для расчета граничных частот
+    gamma = 2**(1/(2 * N))
+    
+    # Стандартная опорная частота (например, 1000 Гц)
+    f_ref = 1000.0
+    
+    # Находим минимальный и максимальный целочисленный показатель степени 'k' так, чтобы f_ref * G^k попадало в диапазон [f_start, f_end].
+    k_min = np.ceil(N * np.log2(f_start / f_ref)).astype(int)
+    k_max = np.floor(N * np.log2(f_end / f_ref)).astype(int)
+    
+    # Создаем массив показателей степени k
+    k_array = np.arange(k_min, k_max + 1)
+
+    central_frequencies = f_ref * (G**k_array)
+    
+    lower_frequencies = central_frequencies / gamma
+    upper_frequencies = central_frequencies * gamma
+    
+    # Убедимся, что все частоты полос находятся в диапазоне [f_start, f_end]
+    valid_indices = (lower_frequencies >= f_start / gamma) & (upper_frequencies <= f_end * gamma)
+    
+    # Округляем до 1 знака после запятой для соответствия предыдущему ответу
+    central_frequencies = np.round(central_frequencies, 1)
+    lower_frequencies = np.round(lower_frequencies, 1)
+    upper_frequencies = np.round(upper_frequencies, 1)
+
+    return central_frequencies, lower_frequencies, upper_frequencies
