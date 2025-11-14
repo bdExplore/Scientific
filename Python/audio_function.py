@@ -251,7 +251,7 @@ def t_arr_for_corr_t(data):
 
 def RMS(signal):
     N = len(signal)
-    energy = np.sqrt(np.sum(np.abs(signal) ** 2) / N)  # Сумма квадратов модуля амплитуд
+    energy = np.sqrt(np.abs(np.sum(np.abs(signal) * np.abs(signal))) / N)  # Сумма квадратов модуля амплитуд
     return energy 
 
 def generate_octave_band_frequencies(N, f_start, f_end):
