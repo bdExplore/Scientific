@@ -52,22 +52,22 @@ def plot1_f (X1, Y1, name, freq_sep:int, xlabel = '', ylabel = 'Амплитуд
     plt.show()   
     
 
-def corr_t(data1_t, data2_t, f_filt_min, f_filt_max):
+# def corr_t(data1_t, data2_t, f_filt_min, f_filt_max, fs):
     
-    data1_f = fft(data1_t)
-    data2_f = fft(data2_t)
-    data1_filt = (filt_freq(data1_f, f_filt_min, f_filt_max))
-    data2_filt = (filt_freq(data2_f, f_filt_min, f_filt_max))
+#     data1_f = fft(data1_t)
+#     data2_f = fft(data2_t)
+#     data1_filt = (filt_freq(data1_f, f_filt_min, f_filt_max, fs))
+#     data2_filt = (filt_freq(data2_f, f_filt_min, f_filt_max, fs))
 
-    return ifft(data1_filt*np.conj(data2_filt))
+#     return ifft(data1_filt*np.conj(data2_filt))
 
 
-def corr_f(data1_t, data2_t, f_filt_min, f_filt_max):
+def corr_f(data1_t, data2_t, f_filt_min, f_filt_max, fs):
     mn = min(len(data1_t), len(data2_t))
     data1_f = fft(data1_t)
     data2_f = fft(data2_t)
-    data1_filt = filt_freq(data1_f, f_filt_min, f_filt_max)
-    data2_filt = filt_freq(data2_f, f_filt_min, f_filt_max)
+    data1_filt = filt_freq(data1_f, f_filt_min, f_filt_max, fs)
+    data2_filt = filt_freq(data2_f, f_filt_min, f_filt_max, fs)
 
     fft_abs_s1 = ifft((np.abs(data1_filt))**2)
     fft_abs_s2 = ifft((np.abs(data2_filt))**2)
